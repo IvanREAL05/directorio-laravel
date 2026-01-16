@@ -1,89 +1,104 @@
-<x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full">
-            <!-- Card Container -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                <!-- Header Section -->
-                <div class="px-8 pt-8 pb-6 text-center">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                        Iniciar Sesión
-                    </h2>
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    {{-- enlace para usar bootstrap y css --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100 justify-content-center">
+        <div class="col-md-4">
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+
+                    <h4 class="text-center mb-3">Iniciar sesión</h4>
+                    <p class="text-center text-muted mb-4">
                         Ingresa tus credenciales para continuar
                     </p>
-                </div>
 
-                <!-- Form Section -->
-                <div class="px-8 py-8">
-                    <!-- Session Status -->
-                    <x-auth-session-status class="mb-4" :status="session('status')" />
+                    {{-- Session Status --}}
+                    @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
-                    <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                    <form method="POST" action="{{ route('login') }}">
                         @csrf
 
-                        <!-- Email Address -->
-                        <div>
-                            <x-input-label for="email" :value="__('Email')" class="text-gray-700 dark:text-gray-300" />
-                            <x-text-input id="email" 
-                                class="block w-full mt-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" 
-                                type="email" 
-                                name="email" 
-                                :value="old('email')" 
-                                required 
-                                autofocus 
-                                autocomplete="username" />
-                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        {{-- Email --}}
+                        <div class="mb-3">
+                            <label class="form-label">Correo</label>
+                            <input type="email"
+                                   name="email"
+                                   value="{{ old('email') }}"
+                                   class="form-control @error('email') is-invalid @enderror"
+                                   required autofocus>
+
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
-                        <!-- Password -->
-                        <div>
-                            <x-input-label for="password" :value="__('Password')" class="text-gray-700 dark:text-gray-300" />
-                            <x-text-input id="password" 
-                                class="block w-full mt-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                type="password"
-                                name="password"
-                                required 
-                                autocomplete="current-password" />
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        {{-- Password --}}
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password"
+                                   name="password"
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   required>
+
+                            @error('password')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
-                        <!-- Remember Me & Forgot Password -->
-                        <div class="flex items-center justify-between">
-                            <label for="remember_me" class="flex items-center">
-                                <input id="remember_me" 
-                                    type="checkbox" 
-                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600" 
-                                    name="remember">
-                                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __('Remember me') }}
-                                </span>
-                            </label>
+                        {{-- Remember --}}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="remember"
+                                       id="remember">
+                                <label class="form-check-label" for="remember">
+                                    Recordarme
+                                </label>
+                            </div>
 
                             @if (Route::has('password.request'))
-                                <a class="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400" 
-                                   href="{{ route('password.request') }}">
-                                    {{ __('Forgot your password?') }}
+                                <a href="{{ route('password.request') }}" class="text-decoration-none">
+                                    ¿Olvidaste tu contraseña?
                                 </a>
                             @endif
                         </div>
 
-                        <!-- Submit Button -->
-                        <div>
-                            <x-primary-button class="w-full flex justify-center py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md focus:ring-2 focus:ring-indigo-500">
-                                {{ __('Log in') }}
-                            </x-primary-button>
-                        </div>
-
-                        <!-- Register link -->
-                        <div class="mt-4 text-center">
-                            <a href="{{ route('register') }}"
-                            class="text-sm text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400">
-                                ¿No tienes cuenta? Regístrate
-                            </a>
-                        </div>
+                        {{-- Button --}}
+                        <button class="btn btn-primary w-100">
+                            Iniciar sesión
+                        </button>
                     </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{{ route('register') }}" class="text-decoration-none">
+                            ¿No tienes cuenta? Regístrate
+                        </a>
+                    </div>
+
                 </div>
             </div>
+
         </div>
     </div>
-</x-guest-layout>
+</div>
+
+</body>
+</html>
