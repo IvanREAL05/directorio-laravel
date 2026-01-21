@@ -6,11 +6,7 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\UserController;
 
-/*
-|--------------------------------------------------------------------------
-| Ruta pública
-|--------------------------------------------------------------------------
-*/
+
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('empleados.index');
